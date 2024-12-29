@@ -43,25 +43,30 @@ export default function ResourceTracker() {
   const [language, setLanguage] = useState<'english' | 'kannada'>('english');
 
   // Language translations
+  interface DayInfo {
+    id: keyof WorkDays;
+    label: string;
+  }
+
   const translations: Translations = {
     weekdays: {
       english: [
-        { id: 'monday', label: 'Monday' },
-        { id: 'tuesday', label: 'Tuesday' },
-        { id: 'wednesday', label: 'Wednesday' },
-        { id: 'thursday', label: 'Thursday' },
-        { id: 'friday', label: 'Friday' },
-        { id: 'saturday', label: 'Saturday' },
-        { id: 'sunday', label: 'Sunday' }
+        { id: 'monday' as const, label: 'Monday' },
+        { id: 'tuesday' as const, label: 'Tuesday' },
+        { id: 'wednesday' as const, label: 'Wednesday' },
+        { id: 'thursday' as const, label: 'Thursday' },
+        { id: 'friday' as const, label: 'Friday' },
+        { id: 'saturday' as const, label: 'Saturday' },
+        { id: 'sunday' as const, label: 'Sunday' }
       ],
       kannada: [
-        { id: 'monday', label: 'ಸೋಮವಾರ' },
-        { id: 'tuesday', label: 'ಮಂಗಳವಾರ' },
-        { id: 'wednesday', label: 'ಬುಧವಾರ' },
-        { id: 'thursday', label: 'ಗುರುವಾರ' },
-        { id: 'friday', label: 'ಶುಕ್ರವಾರ' },
-        { id: 'saturday', label: 'ಶನಿವಾರ' },
-        { id: 'sunday', label: 'ಭಾನುವಾರ' }
+        { id: 'monday' as const, label: 'ಸೋಮವಾರ' },
+        { id: 'tuesday' as const, label: 'ಮಂಗಳವಾರ' },
+        { id: 'wednesday' as const, label: 'ಬುಧವಾರ' },
+        { id: 'thursday' as const, label: 'ಗುರುವಾರ' },
+        { id: 'friday' as const, label: 'ಶುಕ್ರವಾರ' },
+        { id: 'saturday' as const, label: 'ಶನಿವಾರ' },
+        { id: 'sunday' as const, label: 'ಭಾನುವಾರ' }
       ]
     },
     resources: {
@@ -133,9 +138,9 @@ export default function ResourceTracker() {
     return translations.resources[language]
       .filter(resource => !entries.some(entry => entry.resource === resource.name))
       .sort((a, b) => a.name.localeCompare(b.name));
-  }, [language, entries]);
+  }, [language, entries, translations.resources]);
 
-  const days = translations.weekdays[language];
+  const days = translations.weekdays[language] as DayInfo[];
 
   const handleDayChange = (day) => {
     setWorkDays(prev => ({
