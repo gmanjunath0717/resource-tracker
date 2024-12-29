@@ -277,8 +277,8 @@ export default function ResourceTracker() {
                 <input
                   type="checkbox"
                   id={id}
-                  checked={workDays[id]}
-                  onChange={() => handleDayChange(id)}
+                  checked={workDays[id as keyof WorkDays]}
+                  onChange={() => handleDayChange(id as keyof WorkDays)}
                   className="mr-3 h-4 w-4"
                 />
                 <label htmlFor={id} className="text-gray-800 font-medium">
