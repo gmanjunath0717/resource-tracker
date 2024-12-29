@@ -41,16 +41,64 @@ export default function ResourceTracker() {
     },
     resources: {
       english: [
-        { name: 'Chandra Writer', rate: 500 },
-        { name: 'Mohan', rate: 500 },
         { name: 'Mani', rate: 400 },
-        { name: 'Anni', rate: 400 }
+        { name: 'Anni', rate: 400 },
+        { name: 'Mahesha', rate: 400 },
+        { name: 'Rekha', rate: 400 },
+        { name: 'Ganesha', rate: 400 },
+        { name: 'Madeva', rate: 400 },
+        { name: 'Ravi', rate: 400 },
+        { name: 'Ammu', rate: 350 },
+        { name: 'Lalitha', rate: 350 },
+        { name: 'Padma', rate: 350 },
+        { name: 'Yashoda', rate: 350 },
+        { name: 'Anusuya', rate: 350 },
+        { name: 'Uma', rate: 350 },
+        { name: 'Shanti', rate: 350 },
+        { name: 'Saroja', rate: 350 },
+        { name: 'Geetha', rate: 350 },
+        { name: 'Anjali', rate: 350 },
+        { name: 'Basanthi', rate: 350 },
+        { name: 'Pushpa', rate: 350 },
+        { name: 'Gowramma', rate: 350 },
+        { name: 'Vedavathi', rate: 350 },
+        { name: 'Podiya', rate: 400 },
+        { name: 'Kumara', rate: 400 },
+        { name: 'Marigowda', rate: 400 },
+        { name: 'Bagyamma', rate: 350 },
+        { name: 'Rashmi', rate: 350 },
+        { name: 'Shubha', rate: 350 },
+        { name: 'Lakshmi', rate: 350 }
       ],
       kannada: [
-        { name: 'ಚಂದ್ರ ರೈಟರ್', rate: 500 },
-        { name: 'ಮೋಹನ್', rate: 500 },
         { name: 'ಮಣಿ', rate: 400 },
-        { name: 'ಅನ್ನಿ', rate: 400 }
+        { name: 'ಅನ್ನಿ', rate: 400 },
+        { name: 'ಮಹೇಶ', rate: 400 },
+        { name: 'ರೇಖಾ', rate: 400 },
+        { name: 'ಗಣೇಶ', rate: 400 },
+        { name: 'ಮಾದೇವ', rate: 400 },
+        { name: 'ರವಿ', rate: 400 },
+        { name: 'ಅಮ್ಮು', rate: 350 },
+        { name: 'ಲಲಿತ', rate: 350 },
+        { name: 'ಪದ್ಮ', rate: 350 },
+        { name: 'ಯಶೋದ', rate: 350 },
+        { name: 'ಅನುಸೂಯ', rate: 350 },
+        { name: 'ಉಮಾ', rate: 350 },
+        { name: 'ಶಾಂತಿ', rate: 350 },
+        { name: 'ಸರೋಜ', rate: 350 },
+        { name: 'ಗೀತಾ', rate: 350 },
+        { name: 'ಅಂಜಲಿ', rate: 350 },
+        { name: 'ಬಸಂತಿ', rate: 350 },
+        { name: 'ಪುಷ್ಪ', rate: 350 },
+        { name: 'ಗೌರಮ್ಮ', rate: 350 },
+        { name: 'ವೇದವತಿ', rate: 350 },
+        { name: 'ಪೋಡಿಯ', rate: 400 },
+        { name: 'ಕುಮಾರ', rate: 400 },
+        { name: 'ಮಾರಿಗೌಡ', rate: 400 },
+        { name: 'ಭಾಗ್ಯಮ್ಮ', rate: 350 },
+        { name: 'ರಶ್ಮಿ', rate: 350 },
+        { name: 'ಶುಭ', rate: 350 },
+        { name: 'ಲಕ್ಷ್ಮಿ', rate: 350 }
       ]
     }
   };
@@ -76,7 +124,7 @@ export default function ResourceTracker() {
 
   const getSelectedDaysString = () => {
     return Object.entries(workDays)
-      .filter(([_, checked]) => checked)
+      .filter(([, checked]) => checked)
       .map(([day]) => {
         const dayObj = days.find(d => d.id === day);
         return dayObj ? dayObj.label : '';
@@ -123,29 +171,23 @@ export default function ResourceTracker() {
   const downloadCSV = () => {
     try {
       // Create CSV content
-      let rows = [];
-      
-      // Add header row
-      rows.push(['Resource', 'Days of the Week', 'Work Days', 'Total', 'Jama', 'Net Payment', 'Paid']);
-      
-      // Add data rows
-      entries.forEach(entry => {
-        // Wrap the days string in quotes to keep it in one cell
-        const daysString = `"${entry.daysOfWeek}"`;
-        
-        rows.push([
+      const csvRows = [
+        // Header row
+        ['Resource', 'Days of the Week', 'Work Days', 'Total', 'Jama', 'Net Payment', 'Paid'],
+        // Data rows
+        ...entries.map(entry => [
           entry.resource,
-          daysString,
+          `"${entry.daysOfWeek}"`,
           entry.workDays,
           entry.total,
           entry.jama,
           entry.total - entry.jama,
           entry.paid ? 'Yes' : 'No'
-        ]);
-      });
+        ])
+      ];
 
       // Convert rows to CSV string with proper line endings
-      const csvContent = '\ufeff' + rows.map(row => row.join(',')).join('\r\n');
+      const csvContent = '\ufeff' + csvRows.map(row => row.join(',')).join('\r\n');
 
       // Download the file
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
