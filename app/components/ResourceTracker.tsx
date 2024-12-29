@@ -2,6 +2,31 @@
 
 import React, { useState } from 'react';
 
+interface Resource {
+  name: string;
+  rate: number;
+}
+
+interface ResourceEntry {
+  resource: string;
+  daysOfWeek: string;
+  workDays: number;
+  total: number;
+  jama: number;
+  paid: boolean;
+}
+
+interface Translations {
+  weekdays: {
+    english: Array<{ id: string; label: string }>;
+    kannada: Array<{ id: string; label: string }>;
+  };
+  resources: {
+    english: Resource[];
+    kannada: Resource[];
+  };
+}
+
 export default function ResourceTracker() {
   const [selectedResource, setSelectedResource] = useState('');
   const [workDays, setWorkDays] = useState({
@@ -14,11 +39,11 @@ export default function ResourceTracker() {
     sunday: false
   });
   const [jamaAmount, setJamaAmount] = useState('');
-  const [entries, setEntries] = useState([]);
-  const [language, setLanguage] = useState('english');
+  const [entries, setEntries] = useState<ResourceEntry[]>([]);
+  const [language, setLanguage] = useState<'english' | 'kannada'>('english');
 
   // Language translations
-  const translations = {
+  const translations: Translations = {
     weekdays: {
       english: [
         { id: 'monday', label: 'Monday' },
@@ -104,9 +129,11 @@ export default function ResourceTracker() {
   };
 
   // Get available resources
-  const availableResources = translations.resources[language]
-    .filter(resource => !entries.some(entry => entry.resource === resource.name))
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const availableResources = React.useMemo(() => {
+    return translations.resources[language]
+      .filter(resource => !entries.some(entry => entry.resource === resource.name))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [language, entries]);
 
   const days = translations.weekdays[language];
 
